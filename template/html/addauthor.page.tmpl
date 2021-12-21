@@ -1,0 +1,15 @@
+{{template "base" .}}
+
+{{define "title"}}Add author{{end}}
+
+{{define "main"}}
+<div class="container">
+        <form method="POST">
+            <input type="text" name="surname"> <br>
+            <input type="text" name="name"> <br>
+            <input type="text" name="middle_name"> <br>
+            <input type="text" name="image_link"> <br>
+            <input type="submit" value="Send">
+        </form>
+</div>
+{{end}}
