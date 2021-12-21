@@ -1,0 +1,20 @@
+{{template "base" .}}
+
+{{define "title"}}Authors{{end}}
+
+{{define "main"}}
+<div class="container">
+    <a href="/author/create">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Add author</button>
+    </a> <br>
+    {{range .}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.Surname}}</td>
+        <td>{{.Name}}</td>
+        <td>{{.Middle_name}}</td>
+        <td>{{.Image_link}}</td><br>
+    </tr>
+    {{end}}
+</div>
+{{end}}
