@@ -1,5 +1,5 @@
 package service
 
-func (app *application) insert() {
-
-}
+//func (app *application) insert() {
+//	return
+//}

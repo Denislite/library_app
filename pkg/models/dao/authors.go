@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/Denislite/library_app/pkg/models"
 )
 
@@ -9,9 +10,9 @@ type Model struct {
 	DB *sql.DB
 }
 
-func (m *Model) InsertAuthor(surname, name, middle_name, image_path string) error {
+func (m *Model) InsertAuthor(surname, name, middleName, imagePath string) error {
 	req := "INSERT INTO authors (surname, name, middle_name, image_path) VALUES(?,?,?,?)"
-	_, err := m.DB.Exec(req, surname, name, middle_name, image_path)
+	_, err := m.DB.Exec(req, surname, name, middleName, imagePath)
 	if err != nil {
 		return err
 	}
@@ -44,4 +45,22 @@ func (m *Model) GetAllAuthors() ([]*models.Author, error) {
 	}
 
 	return authors, nil
+}
+
+func (m *Model) GetAuthorByID(id int) (*models.Author, error) {
+	req := "SELECT * FROM authors WHERE id = ?"
+
+	row := m.DB.QueryRow(req, id)
+	author := &models.Author{}
+
+	err := row.Scan(&author.ID, &author.Surname, &author.Name, &author.Middle_name, &author.Image_link)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		} else {
+			return nil, err
+		}
+	}
+
+	return author, nil
 }
