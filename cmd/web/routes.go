@@ -1,10 +1,13 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func (app *application) routes() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/author", app.showAuthor)
 	mux.HandleFunc("/authors", app.showAuthors)
 	mux.HandleFunc("/authors/create", app.createAuthor)
 	mux.HandleFunc("/book", app.showBook)
