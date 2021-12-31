@@ -4,66 +4,37 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"html/template"
+	"github.com/Denislite/library_app/env"
+	"github.com/Denislite/library_app/pkg/service"
 	"net/http"
 	"strconv"
 )
 
 //home page
-func (app *application) home(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
 
-	files := []string{
-		"./template/html/home.page.tmpl",
-		"./template/html/base.layout.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-
-	err = ts.Execute(w, nil)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	render(w, r, "home.page.tmpl", &env.TemplateData{})
 }
 
 //all functions for authors
-func (app *application) showAuthors(w http.ResponseWriter, r *http.Request) {
-	authors, err := app.model.GetAllAuthors()
+func showAuthors(w http.ResponseWriter, r *http.Request) {
+	data, err := service.GetAllAuthors()
 	if err != nil {
-		app.errorLog.Println(err.Error())
+		fmt.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 
-	files := []string{
-		"./template/html/author.page.tmpl",
-		"./template/html/base.layout.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-
-	err = ts.Execute(w, authors)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	render(w, r, "author.page.tmpl", &env.TemplateData{
+		Authors: data,
+	})
 }
 
-func (app *application) createAuthor(w http.ResponseWriter, r *http.Request) {
+func createAuthor(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 
 		surname := r.FormValue("surname")
@@ -71,43 +42,28 @@ func (app *application) createAuthor(w http.ResponseWriter, r *http.Request) {
 		middleName := r.FormValue("middle_name")
 		imageLink := uploadImage("authors", r)
 
-		err := app.model.InsertAuthor(surname, name, middleName, imageLink)
+		err := service.ValidateAuthor(surname, name, middleName, imageLink, r)
 
 		if err != nil {
-			app.errorLog.Println(err.Error())
+			fmt.Println(err)
 			return
 		}
 
 		http.Redirect(w, r, "/authors", 301)
 	} else {
-		files := []string{
-			"./template/html/addauthor.page.tmpl",
-			"./template/html/base.layout.tmpl",
-		}
 
-		ts, err := template.ParseFiles(files...)
-		if err != nil {
-			app.errorLog.Println(err.Error())
-			http.Error(w, "Internal Server Error", 500)
-			return
-		}
-
-		err = ts.Execute(w, nil)
-		if err != nil {
-			app.errorLog.Println(err.Error())
-			http.Error(w, "Internal Server Error", 500)
-		}
+		render(w, r, "addauthor.page.tmpl", &env.TemplateData{})
 	}
 }
 
-func (app *application) showAuthor(w http.ResponseWriter, r *http.Request) {
+func showAuthor(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
 		return
 	}
 
-	author, err := app.model.GetAuthorByID(id)
+	data, err := service.GetAuthorByID(id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return
@@ -116,31 +72,31 @@ func (app *application) showAuthor(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	fmt.Fprintf(w, "%v", author)
+	fmt.Fprintf(w, "%v", data)
 }
 
 //all functions for books
-func (app *application) showBook(w http.ResponseWriter, r *http.Request) {
+func showBook(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) showBooks(w http.ResponseWriter, r *http.Request) {
+func showBooks(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) createBook(w http.ResponseWriter, r *http.Request) {
+func createBook(w http.ResponseWriter, r *http.Request) {
 
 }
 
 //all functions for users
-func (app *application) showUser(w http.ResponseWriter, r *http.Request) {
+func showUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) showUsers(w http.ResponseWriter, r *http.Request) {
+func showUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
+func createUser(w http.ResponseWriter, r *http.Request) {
 
 }

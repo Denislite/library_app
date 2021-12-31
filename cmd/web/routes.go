@@ -4,18 +4,18 @@ import (
 	"net/http"
 )
 
-func (app *application) routes() *http.ServeMux {
+func routes() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/author", app.showAuthor)
-	mux.HandleFunc("/authors", app.showAuthors)
-	mux.HandleFunc("/authors/create", app.createAuthor)
-	mux.HandleFunc("/book", app.showBook)
-	mux.HandleFunc("/books", app.showBooks)
-	mux.HandleFunc("/books/create", app.createBook)
-	mux.HandleFunc("/user", app.showUser)
-	mux.HandleFunc("/users/", app.showUsers)
-	mux.HandleFunc("/users/create", app.createUser)
+	mux.HandleFunc("/", home)
+	mux.HandleFunc("/author", showAuthor)
+	mux.HandleFunc("/authors", showAuthors)
+	mux.HandleFunc("/authors/create", createAuthor)
+	mux.HandleFunc("/book", showBook)
+	mux.HandleFunc("/books", showBooks)
+	mux.HandleFunc("/books/create", createBook)
+	mux.HandleFunc("/user", showUser)
+	mux.HandleFunc("/users/", showUsers)
+	mux.HandleFunc("/users/create", createUser)
 
 	fileServer := http.FileServer(http.Dir("./template/static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))

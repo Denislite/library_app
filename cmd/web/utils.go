@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/Denislite/library_app/env"
 	"io/ioutil"
 	"net/http"
 )
@@ -39,4 +40,16 @@ func uploadImage(imgType string, r *http.Request) (imgLink string) {
 	imgLink = tempFile.Name()[8:]
 
 	return imgLink
+}
+
+func render(w http.ResponseWriter, r *http.Request, name string, td *env.TemplateData) {
+	ts, ok := env.Env.TemplateCache[name]
+	if !ok {
+		return
+	}
+
+	err := ts.Execute(w, td)
+	if err != nil {
+		return
+	}
 }

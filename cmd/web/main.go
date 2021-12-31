@@ -3,18 +3,12 @@ package main
 import (
 	"database/sql"
 	"flag"
-	"github.com/Denislite/library_app/pkg/models/dao"
+	"github.com/Denislite/library_app/env"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
 )
-
-type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	model    *dao.Model
-}
 
 func main() {
 	addr := flag.String("addr", ":8000", "HTTP-address")
@@ -29,16 +23,12 @@ func main() {
 	}
 	defer db.Close()
 
-	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		model:    &dao.Model{DB: db},
-	}
+	env.Env = env.NewEnv(db)
 
 	server := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
-		Handler:  app.routes(),
+		Handler:  routes(),
 	}
 
 	infoLog.Printf("Starting server at 127.0.0.1%s", *addr)
