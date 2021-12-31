@@ -7,13 +7,14 @@
     <a href="/authors/create">
         <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Add author</button>
     </a> <br>
+    <img src="/static/authors/upload-073742375.png" alt="">
     {{range .}}
     <tr>
         <td>{{.ID}}</td>
         <td>{{.Surname}}</td>
         <td>{{.Name}}</td>
         <td>{{.Middle_name}}</td>
-        <td>{{.Image_link}}</td><br>
+        <img src="{{.Image_link}}" alt=""> <br>
     </tr>
     {{end}}
 </div>

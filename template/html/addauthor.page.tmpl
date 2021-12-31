@@ -3,13 +3,33 @@
 {{define "title"}}Add author{{end}}
 
 {{define "main"}}
-<div class="container">
-        <form method="POST">
-            <input type="text" name="surname"> <br>
-            <input type="text" name="name"> <br>
-            <input type="text" name="middle_name"> <br>
-            <input type="text" name="image_link"> <br>
-            <input type="submit" value="Send">
-        </form>
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/authors/create" method="post">
+                <img class="mb-4" src="/static/assets/author_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Add new Author</h1>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="surname" id="surname">
+                    <label for="surname">Surname</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="name" id="name">
+                    <label for="name">Name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="middle_name" id="middle_name">
+                    <label for="middle_name">Middle Name</label>
+                </div>
+                <div class="mt-3">
+                    <input type="file" name="newFile" id="newFile">
+                    <label for="newFile">Choose image</label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {{end}}
