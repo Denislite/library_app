@@ -9,11 +9,14 @@ import (
 type TemplateData struct {
 	Author  *models.Author
 	Authors []*models.Author
+	Book    *models.Book
+	Books   []*models.Book
+	User    *models.User
+	Users   []*models.User
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
-
 	pages, err := filepath.Glob(filepath.Join(dir, "*.page.tmpl"))
 	if err != nil {
 		return nil, err
