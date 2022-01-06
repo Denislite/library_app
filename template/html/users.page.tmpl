@@ -1,0 +1,39 @@
+{{template "base" .}}
+
+{{define "title"}}Users{{end}}
+
+{{define "main"}}
+<div class="py-3">
+    <div class="container">
+        <div class="text-center">
+            <a href="/users/create">
+                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Add user</button>
+            </a> <br>
+        </div>
+        <h1 class="h3 mb-3 py-3 fw-normal text-center">User list:</h1>
+        <div class="album">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-5">
+                    {{range .Users}}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img src="/static/assets/user_logo.png" class="bd-placeholder-img card-img-top" width="100%" height="100%" alt="">
+                            <div class="card-body">
+                                <p class="card-text"> {{.Surname}} {{.Name}} </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="/user?id={{.ID}}">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">View info</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

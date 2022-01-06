@@ -1,0 +1,58 @@
+{{template "base" .}}
+
+{{define "title"}}Add book{{end}}
+
+{{define "main"}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/books/create" method="post">
+                <img class="mb-4" src="/static/assets/book_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Add new Book</h1>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="name" id="name">
+                    <label for="name">name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="alt_name" id="alt_name">
+                    <label for="alt_name">alt name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="price" id="price">
+                    <label for="price">price</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="count" id="count">
+                    <label for="count">count</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="price_per_day" id="price_per_day">
+                    <label for="price_per_day">price per day</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="year" id="year">
+                    <label for="year">year </label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="genre" id="genre">
+                    <label for="genre">genre </label>
+                </div>
+                <p>
+                    <select name="author" id="author" class="form-select" size="3" multiple>
+                    {{range .Authors}}
+                    <option value="{{.ID}}">{{.Surname}} {{.Name}} {{.MiddleName}}</option>
+                    {{end}}
+                    </select>
+                </p>
+                <div class="mt-3">
+                    <input type="file" name="books" id="books">
+                    <label for="books">Choose image</label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -33,7 +33,7 @@ func (m *Model) GetAllAuthors() ([]*models.Author, error) {
 
 	for rows.Next() {
 		author := &models.Author{}
-		err = rows.Scan(&author.ID, &author.Surname, &author.Name, &author.Middle_name, &author.Image_link)
+		err = rows.Scan(&author.ID, &author.Surname, &author.Name, &author.MiddleName, &author.ImageLink)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +53,7 @@ func (m *Model) GetAuthorByID(id int) (*models.Author, error) {
 	row := m.DB.QueryRow(req, id)
 	author := &models.Author{}
 
-	err := row.Scan(&author.ID, &author.Surname, &author.Name, &author.Middle_name, &author.Image_link)
+	err := row.Scan(&author.ID, &author.Surname, &author.Name, &author.MiddleName, &author.ImageLink)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, err

@@ -6,7 +6,11 @@ import (
 	"net/http"
 )
 
-func ValidateAuthor(surname, name, middleName, imagePath string, r *http.Request) error {
+func ValidateAuthor(r *http.Request) error {
+	surname := r.FormValue("surname")
+	name := r.FormValue("name")
+	middleName := r.FormValue("middle_name")
+	imagePath := UploadImage("authors", r)
 	env.Env.Model.InsertAuthor(surname, name, middleName, imagePath)
 	return nil
 }

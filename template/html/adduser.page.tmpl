@@ -1,0 +1,47 @@
+{{template "base" .}}
+
+{{define "title"}}Add user{{end}}
+
+{{define "main"}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/users/create" method="post">
+                <img class="mb-4" src="/static/assets/user_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Add new User</h1>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="surname" id="surname">
+                    <label for="surname">surname</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="name" id="name">
+                    <label for="name">name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="middle_name" id="middle_name">
+                    <label for="middle_name">middle name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="passport_data" id="passport_data">
+                    <label for="passport_data">passport data</label>
+                </div>
+                <div class="form-floating">
+                    <input type="date" class="form-control" name="birthday_date" id="birthday_date">
+                    <label for="birthday_date">birthday date</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="email" id="email">
+                    <label for="email">email </label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="address" id="address">
+                    <label for="address">address </label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
