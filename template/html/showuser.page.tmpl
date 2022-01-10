@@ -63,7 +63,8 @@
                         <hr>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a class="btn btn-info " target="__blank" href="/user/give">Give Book</a>
+                                <a class="btn btn-info " target="__blank" href="/user/give?id={{.ID}}">Give Book</a>
+                                <a class="btn btn-info " target="__blank" href="/user/take?id={{.ID}}">Take Book</a>
                             </div>
                         </div>
                     </div>
@@ -71,7 +72,23 @@
             </div>
         {{end}}
         </div>
-
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    {{range .Books}}
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0"> Book ID: {{.ID}}</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <a href="/book?id={{.ID}}">{{.Name}} ({{.AltName}}) </a>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {{end}}

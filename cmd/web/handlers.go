@@ -90,7 +90,7 @@ func showBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := service.GetBookByID(id)
+	book, authors, err := service.GetBookByID(id)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Internal Server Error", 500)
@@ -98,7 +98,8 @@ func showBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	service.Render(w, r, "showbook.page.tmpl", &env.TemplateData{
-		Book: data,
+		Book:    book,
+		Authors: authors,
 	})
 }
 
@@ -146,7 +147,7 @@ func showUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := service.GetUserByID(id)
+	user, books, err := service.GetUserByID(id)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Internal Server Error", 500)
@@ -154,7 +155,8 @@ func showUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	service.Render(w, r, "showuser.page.tmpl", &env.TemplateData{
-		User: data,
+		User:  user,
+		Books: books,
 	})
 }
 
@@ -187,9 +189,63 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func giveBook(w http.ResponseWriter, r *http.Request) {
-
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	if r.Method == http.MethodPost {
+		err = service.GiveBook(r, id)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		http.Redirect(w, r, "/users", 301)
+	} else {
+		books, err := service.GetAvailableBooks()
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		user, _, err := service.GetUserByID(id)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		service.Render(w, r, "givebook.page.tmpl", &env.TemplateData{
+			Books: books,
+			User:  user,
+		})
+	}
 }
 
 func takeBook(w http.ResponseWriter, r *http.Request) {
-
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	if r.Method == http.MethodPost {
+		err = service.TakeBook(r, id)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		http.Redirect(w, r, "/users", 301)
+	} else {
+		user, books, err := service.GetUserByID(id)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		service.Render(w, r, "takebook.page.tmpl", &env.TemplateData{
+			Books: books,
+			User:  user,
+		})
+	}
 }

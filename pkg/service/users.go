@@ -21,6 +21,18 @@ func GetAllUsers() ([]*models.User, error) {
 	return env.Env.Model.GetAllUsers()
 }
 
-func GetUserByID(id int) (*models.User, error) {
+func GetUserByID(id int) (*models.User, []*models.Book, error) {
 	return env.Env.Model.GetUserByID(id)
+}
+
+func GiveBook(r *http.Request, id int) error {
+	book := r.FormValue("book")
+	returnDate := r.FormValue("return_date")
+	return env.Env.Model.GiveBook(id, book, returnDate)
+}
+
+func TakeBook(r *http.Request, id int) error {
+	book := r.FormValue("book")
+	rating := r.FormValue("rating")
+	return env.Env.Model.TakeBook(id, book, rating)
 }

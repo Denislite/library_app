@@ -1,0 +1,32 @@
+{{template "base" .}}
+
+{{define "title"}}Give book{{end}}
+
+{{define "main"}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            {{with .User}}
+            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/user/give?id={{.ID}}" method="post">
+                {{end}}
+                <img class="mb-4" src="/static/assets/book_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Give book</h1>
+                <div class="form-floating">
+                    <input type="date" class="form-control" name="return_date" id="return_date">
+                    <label for="return_date">return date</label>
+                </div>
+                <p>
+                    <select name="book" id="book" class="form-select" size="3">
+                        {{range .Books}}
+                        <option value="{{.ID}}">{{.Name}}</option>
+                        {{end}}
+                    </select>
+                </p>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
