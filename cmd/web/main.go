@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"github.com/Denislite/library_app/env"
+	"github.com/Denislite/library_app/pkg/autoupdate"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
@@ -30,6 +31,8 @@ func main() {
 		ErrorLog: errorLog,
 		Handler:  routes(),
 	}
+
+	go autoupdate.DutyUpdate()
 
 	infoLog.Printf("Starting server at 127.0.0.1%s", *addr)
 	err = server.ListenAndServe()

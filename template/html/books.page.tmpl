@@ -17,7 +17,11 @@
                     {{range .Books}}
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="{{.ImageLink}}" class="bd-placeholder-img card-img-top" width="100%" height="100%" alt="">
+                            {{ if .ImageLink}}
+                            <img src="{{.ImageLink}}" class="bd-placeholder-img card-img-top" width="100%" height="100%"  alt="">
+                            {{ else }}
+                            <img src="/static/assets/book_logo.png" class="bd-placeholder-img card-img-top" width="100%" height="100%"  alt="">
+                            {{ end }}
                             <div class="card-body">
                                 <p class="card-text"> {{.Name}} ({{.AltName}})</p>
                                 <div class="d-flex justify-content-between align-items-center">

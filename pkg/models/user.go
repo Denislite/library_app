@@ -9,6 +9,7 @@ type User struct {
 	BirthdayDate string
 	Email        string
 	Address      string
-	DutyCount    int
+	Discount     float64
+	DutyCount    float64
 	BookCount    int
 }

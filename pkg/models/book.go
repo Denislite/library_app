@@ -5,10 +5,10 @@ type Book struct {
 	Name        string
 	AltName     string
 	Genre       string
-	Price       int
+	Price       float64
 	Count       int
 	ImageLink   string
-	PricePerDay int
+	PricePerDay float64
 	Year        int
 	RegDate     string
 	Rating      int

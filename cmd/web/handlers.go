@@ -127,14 +127,18 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 
 		http.Redirect(w, r, "/books", 301)
 	} else {
-		data, err := service.GetAllAuthors()
+		authors, err := service.GetAllAuthors()
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)
 			return
 		}
+
+		genres, err := service.GetAllGenres()
+
 		service.Render(w, r, "addbook.page.tmpl", &env.TemplateData{
-			Authors: data,
+			Authors: authors,
+			Genres:  genres,
 		})
 	}
 }
@@ -203,7 +207,7 @@ func giveBook(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Redirect(w, r, "/users", 301)
 	} else {
-		books, err := service.GetAvailableBooks()
+		books, err := service.GetAvailableBooks(id)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)

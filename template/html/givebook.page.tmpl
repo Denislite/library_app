@@ -7,7 +7,7 @@
     <div class="container">
         <div class="w-100 d-flex justify-content-center">
             {{with .User}}
-            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/user/give?id={{.ID}}" method="post">
+            <form enctype="multipart/form-data" action="/user/give?id={{.ID}}" method="post">
                 {{end}}
                 <img class="mb-4" src="/static/assets/book_logo.png" alt="">
                 <h1 class="h3 mb-3 fw-normal">Give book</h1>

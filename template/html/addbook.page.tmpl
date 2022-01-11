@@ -6,7 +6,7 @@
 <div class="text-center py-3">
     <div class="container">
         <div class="w-100 d-flex justify-content-center">
-            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/books/create" method="post">
+            <form enctype="multipart/form-data" action="/books/create" method="post">
                 <img class="mb-4" src="/static/assets/book_logo.png" alt="">
                 <h1 class="h3 mb-3 fw-normal">Add new Book</h1>
                 <div class="form-floating">
@@ -33,15 +33,16 @@
                     <input type="text" class="form-control" name="year" id="year">
                     <label for="year">year </label>
                 </div>
-                <div class="form-floating">
-                    <input type="text" class="form-control" name="genre" id="genre">
-                    <label for="genre">genre </label>
-                </div>
                 <p>
+                    <select name="genre" id="genre" class="form-select" size="3" multiple>
+                        {{range .Authors}}
+                        <option value="{{.ID}}">{{.Surname}} {{.Name}} {{.MiddleName}}</option>
+                        {{end}}
+                    </select>
                     <select name="author" id="author" class="form-select" size="3" multiple>
-                    {{range .Authors}}
-                    <option value="{{.ID}}">{{.Surname}} {{.Name}} {{.MiddleName}}</option>
-                    {{end}}
+                        {{range .Genres}}
+                        <option value="{{.Name}}">{{.Name}}</option>
+                        {{end}}
                     </select>
                 </p>
                 <div class="mt-3">

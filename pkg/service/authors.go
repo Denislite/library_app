@@ -11,8 +11,8 @@ func ValidateAuthor(r *http.Request) error {
 	name := r.FormValue("name")
 	middleName := r.FormValue("middle_name")
 	imagePath := UploadImage("authors", r)
-	env.Env.Model.InsertAuthor(surname, name, middleName, imagePath)
-	return nil
+
+	return env.Env.Model.InsertAuthor(surname, name, middleName, imagePath)
 }
 
 func GetAllAuthors() ([]*models.Author, error) {

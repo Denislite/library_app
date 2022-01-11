@@ -7,7 +7,7 @@
     <div class="container">
         <div class="w-100 d-flex justify-content-center">
             {{with .User}}
-            <form enctype="multipart/form-data" action="http://127.0.0.1:8000/user/take?id={{.ID}}" method="post">
+            <form enctype="multipart/form-data" action="/user/take?id={{.ID}}" method="post">
                 <img class="mb-4" src="/static/assets/book_logo.png" alt="">
                 <h1 class="h3 mb-3 fw-normal">Take from user: {{.Surname}} {{.Name}}</h1>
                 {{end}}
@@ -21,6 +21,10 @@
                 <div class="form-floating">
                     <input type="text" class="form-control" name="rating" id="rating">
                     <label for="rating">rating</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="fine" id="fine">
+                    <label for="fine">fine</label>
                 </div>
                 <div>
                     <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">

@@ -3,12 +3,12 @@ package dao
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/Denislite/library_app/pkg/models"
 )
 
 func (m *Model) InsertBook(name, altName, imageLink, genre, price, count, pricePerDay, year string, authors []string) error {
-	req := "INSERT INTO books (name, alt_name, genre, price, count, image_path, price_per_day, year, reg_date) VALUES(?,?,?,?,?,?,?,?,UTC_TIMESTAMP())"
+	req := `INSERT INTO books (name, alt_name, genre, price, count, image_path, price_per_day, year, reg_date) 
+			VALUES(?,?,?,?,?,?,?,?,UTC_TIMESTAMP())`
 	result, err := m.DB.Exec(req, name, altName, genre, price, count, imageLink, pricePerDay, year)
 	if err != nil {
 		return err
@@ -44,8 +44,8 @@ func (m *Model) GetAllBooks() ([]*models.Book, error) {
 
 	for rows.Next() {
 		book := &models.Book{}
-		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink, &book.PricePerDay,
-			&book.Year, &book.RegDate, &book.Rating)
+		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink,
+			&book.PricePerDay, &book.Year, &book.RegDate, &book.Rating)
 		if err != nil {
 			return nil, err
 		}
@@ -64,8 +64,8 @@ func (m *Model) GetBookByID(id int) (*models.Book, []*models.Author, error) {
 
 	row := m.DB.QueryRow(req, id)
 	book := &models.Book{}
-	err := row.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink, &book.PricePerDay,
-		&book.Year, &book.RegDate, &book.Rating)
+	err := row.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink,
+		&book.PricePerDay, &book.Year, &book.RegDate, &book.Rating)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil, err
@@ -111,8 +111,8 @@ func (m *Model) GetTopBooks() ([]*models.Book, error) {
 
 	for rows.Next() {
 		book := &models.Book{}
-		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink, &book.PricePerDay,
-			&book.Year, &book.RegDate, &book.Rating)
+		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink,
+			&book.PricePerDay, &book.Year, &book.RegDate, &book.Rating)
 		if err != nil {
 			return nil, err
 		}
@@ -126,9 +126,10 @@ func (m *Model) GetTopBooks() ([]*models.Book, error) {
 	return books, nil
 }
 
-func (m *Model) GetAvailableBooks() ([]*models.Book, error) {
-	req := "SELECT * FROM books WHERE count > 0"
-	rows, err := m.DB.Query(req)
+func (m *Model) GetAvailableBooks(id int) ([]*models.Book, error) {
+	req := `SELECT * FROM books WHERE count > 0 AND id NOT IN (SELECT book_id FROM usersBooks where user_id = ? 
+            AND returned = FALSE)`
+	rows, err := m.DB.Query(req, id)
 
 	if err != nil {
 		return nil, err
@@ -140,8 +141,8 @@ func (m *Model) GetAvailableBooks() ([]*models.Book, error) {
 
 	for rows.Next() {
 		book := &models.Book{}
-		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink, &book.PricePerDay,
-			&book.Year, &book.RegDate, &book.Rating)
+		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink,
+			&book.PricePerDay, &book.Year, &book.RegDate, &book.Rating)
 		if err != nil {
 			return nil, err
 		}
@@ -153,87 +154,4 @@ func (m *Model) GetAvailableBooks() ([]*models.Book, error) {
 	}
 
 	return books, nil
-}
-
-func (m *Model) GiveBook(id int, book, returnDate string) error {
-	req := "INSERT INTO usersBooks (user_id, book_id, return_date, default_price, rating) SELECT ?, ?, ?, books.price_per_day, 0 FROM books WHERE books.ID = ?"
-	_, err := m.DB.Exec(req, id, book, returnDate, book)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	req = "UPDATE books SET count = count - 1 WHERE id = ?"
-	_, err = m.DB.Exec(req, book)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	req = "UPDATE users SET book_count = book_count + 1 WHERE id = ?"
-	_, err = m.DB.Exec(req, id)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-func (m *Model) TakeBook(id int, book, rating string) error {
-	req := "UPDATE usersBooks SET returned = TRUE, rating = ? WHERE user_id = ? AND book_id = ?"
-	_, err := m.DB.Exec(req, rating, id, book)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	req = "SELECT * FROM usersBooks WHERE book_id = ?"
-	rows, err := m.DB.Query(req, book)
-
-	if err != nil {
-		return err
-	}
-
-	defer rows.Close()
-
-	var userBooks []*models.UserBooks
-
-	for rows.Next() {
-		userBook := &models.UserBooks{}
-		err = rows.Scan(&userBook.BookID, &userBook.UserID, &userBook.ReturnDate, &userBook.DefaultPrice, &userBook.Returned, &userBook.Rating)
-		if err != nil {
-			return err
-		}
-		userBooks = append(userBooks, userBook)
-	}
-
-	if err = rows.Err(); err != nil {
-		return err
-	}
-
-	var bookRating int
-
-	count := 0
-	for _, rating := range userBooks {
-		bookRating += rating.Rating
-		count += 1
-	}
-	bookRating = bookRating / count
-
-	req = "UPDATE books SET rating = ?, count = count + 1 WHERE id = ?"
-	_, err = m.DB.Exec(req, bookRating, book)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	req = "UPDATE users SET book_count = book_count - 1 WHERE id = ?"
-	_, err = m.DB.Exec(req, id)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	return nil
 }

@@ -13,6 +13,7 @@ type TemplateData struct {
 	Books   []*models.Book
 	User    *models.User
 	Users   []*models.User
+	Genres  []*models.Genre
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

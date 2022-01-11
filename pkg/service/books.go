@@ -18,8 +18,7 @@ func ValidateBook(r *http.Request) error {
 	imageLink := UploadImage("books", r)
 	authors := r.PostForm["author"]
 
-	env.Env.Model.InsertBook(name, altName, imageLink, genre, price, count, pricePerDay, year, authors)
-	return nil
+	return env.Env.Model.InsertBook(name, altName, imageLink, genre, price, count, pricePerDay, year, authors)
 }
 
 func GetAllBooks() ([]*models.Book, error) {
@@ -34,6 +33,6 @@ func GetTopBooks() ([]*models.Book, error) {
 	return env.Env.Model.GetTopBooks()
 }
 
-func GetAvailableBooks() ([]*models.Book, error) {
-	return env.Env.Model.GetAvailableBooks()
+func GetAvailableBooks(id int) ([]*models.Book, error) {
+	return env.Env.Model.GetAvailableBooks(id)
 }

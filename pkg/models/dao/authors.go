@@ -22,7 +22,6 @@ func (m *Model) InsertAuthor(surname, name, middleName, imagePath string) error 
 func (m *Model) GetAllAuthors() ([]*models.Author, error) {
 	req := "SELECT * FROM authors"
 	rows, err := m.DB.Query(req)
-
 	if err != nil {
 		return nil, err
 	}
