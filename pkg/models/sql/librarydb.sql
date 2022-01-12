@@ -46,7 +46,7 @@ CREATE TABLE usersBooks (
     default_price FLOAT NOT NULL,
     duty_count FLOAT NOT NULL DEFAULT 0,
     returned BOOL DEFAULT FALSE,
-    rating INTEGER
+    rating INTEGER DEFAULT 0
 );
 
 CREATE TABLE bookAuthors (

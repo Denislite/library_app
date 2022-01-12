@@ -1,17 +1,24 @@
 package service
 
 import (
+	"errors"
 	"github.com/Denislite/library_app/env"
-	"net/http"
+	"github.com/Denislite/library_app/pkg/models"
 	"time"
 )
 
-func GiveBook(r *http.Request, id int) error {
-	book := r.FormValue("book")
-	returnDate := r.FormValue("return_date")
+func GiveBook(id int, book, returnDate string) error {
+	if book == "" {
+		return errors.New("syntax error")
+	}
 
-	dt1, _ := time.Parse("2006-01-02", returnDate)
-	now := -time.Now().Sub(dt1)
+	err := DateValidating(returnDate)
+	if err != nil {
+		return err
+	}
+
+	date, _ := time.Parse("2006-01-02", returnDate)
+	now := -time.Now().Sub(date)
 	days := int(now.Hours() / 24)
 
 	user, _, err := GetUserByID(id)
@@ -33,10 +40,20 @@ func GiveBook(r *http.Request, id int) error {
 	return env.Env.Model.GiveBook(id, days, book, returnDate, discount)
 }
 
-func TakeBook(r *http.Request, id int) error {
-	book := r.FormValue("book")
-	rating := r.FormValue("rating")
-	fine := r.FormValue("fine")
+func TakeBook(id int, book, rating, fine string) error {
+	err := DataValidating(FLOAT, fine)
+	if err != nil {
+		return err
+	}
+
+	err = DataValidating(RATING, rating)
+	if err != nil {
+		return err
+	}
+
+	if book == "" {
+		return errors.New("syntax error")
+	}
 
 	user, _, err := GetUserByID(id)
 	if err != nil {
@@ -53,4 +70,12 @@ func TakeBook(r *http.Request, id int) error {
 	}
 
 	return env.Env.Model.TakeBook(id, book, rating, fine, discount)
+}
+
+func GetAllOrders() ([]*models.UserBooks, error) {
+	return env.Env.Model.GetAllOrders()
+}
+
+func UpdateDuty() error {
+	return env.Env.Model.UpdateDuty()
 }

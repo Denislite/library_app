@@ -3,14 +3,23 @@ package service
 import (
 	"github.com/Denislite/library_app/env"
 	"github.com/Denislite/library_app/pkg/models"
-	"net/http"
 )
 
-func ValidateAuthor(r *http.Request) error {
-	surname := r.FormValue("surname")
-	name := r.FormValue("name")
-	middleName := r.FormValue("middle_name")
-	imagePath := UploadImage("authors", r)
+func ValidateAuthor(surname, name, middleName, imagePath string) error {
+	err := DataValidating(NAME, name)
+	if err != nil {
+		return err
+	}
+
+	err = DataValidating(NAME, surname)
+	if err != nil {
+		return err
+	}
+
+	err = DataValidating(NAME, middleName)
+	if err != nil {
+		return err
+	}
 
 	return env.Env.Model.InsertAuthor(surname, name, middleName, imagePath)
 }

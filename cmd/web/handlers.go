@@ -45,7 +45,12 @@ func showAuthors(w http.ResponseWriter, r *http.Request) {
 
 func createAuthor(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := service.ValidateAuthor(r)
+		surname := r.FormValue("surname")
+		name := r.FormValue("name")
+		middleName := r.FormValue("middle_name")
+		imagePath := service.UploadImage("authors", r)
+
+		err := service.ValidateAuthor(surname, name, middleName, imagePath)
 
 		if err != nil {
 			fmt.Println(err)
@@ -118,7 +123,18 @@ func showBooks(w http.ResponseWriter, r *http.Request) {
 
 func createBook(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := service.ValidateBook(r)
+		r.ParseMultipartForm(30)
+		name := r.FormValue("name")
+		altName := r.FormValue("alt_name")
+		price := r.FormValue("price")
+		count := r.FormValue("count")
+		pricePerDay := r.FormValue("price_per_day")
+		year := r.FormValue("year")
+		imageLink := service.UploadImage("books", r)
+		authors := r.PostForm["author"]
+		genre := r.FormValue("genre")
+
+		err := service.ValidateBook(name, altName, imageLink, genre, price, count, pricePerDay, year, authors)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)
@@ -179,7 +195,15 @@ func showUsers(w http.ResponseWriter, r *http.Request) {
 
 func createUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := service.ValidateUser(r)
+		surname := r.FormValue("surname")
+		name := r.FormValue("name")
+		middleName := r.FormValue("middle_name")
+		passportData := r.FormValue("passport_data")
+		birthdayDate := r.FormValue("birthday_date")
+		email := r.FormValue("email")
+		address := r.FormValue("address")
+
+		err := service.ValidateUser(surname, name, middleName, passportData, birthdayDate, email, address)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)
@@ -199,7 +223,10 @@ func giveBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodPost {
-		err = service.GiveBook(r, id)
+		book := r.FormValue("book")
+		returnDate := r.FormValue("return_date")
+
+		err = service.GiveBook(id, book, returnDate)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)
@@ -233,7 +260,11 @@ func takeBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodPost {
-		err = service.TakeBook(r, id)
+		book := r.FormValue("book")
+		rating := r.FormValue("rating")
+		fine := r.FormValue("fine")
+
+		err = service.TakeBook(id, book, rating, fine)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Internal Server Error", 500)

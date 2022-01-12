@@ -2,13 +2,17 @@ package autoupdate
 
 import (
 	"fmt"
+	"github.com/Denislite/library_app/pkg/service"
 	"time"
 )
 
-//DutyUpdate events for duty and email sending
-func DutyUpdate() {
+func UserChecker() {
 	tick := time.Tick(24 * time.Hour)
 	for range tick {
-		fmt.Println("Test")
+		err := service.UpdateDuty()
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("Upd")
 	}
 }

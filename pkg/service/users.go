@@ -3,17 +3,40 @@ package service
 import (
 	"github.com/Denislite/library_app/env"
 	"github.com/Denislite/library_app/pkg/models"
-	"net/http"
 )
 
-func ValidateUser(r *http.Request) error {
-	surname := r.FormValue("surname")
-	name := r.FormValue("name")
-	middleName := r.FormValue("middle_name")
-	passportData := r.FormValue("passport_data")
-	birthdayDate := r.FormValue("birthday_date")
-	email := r.FormValue("email")
-	address := r.FormValue("address")
+func ValidateUser(surname, name, middleName, passportData, birthdayDate, email, address string) error {
+	err := DataValidating(NAME, name)
+	if err != nil {
+		return err
+	}
+
+	err = BirthdayDateValidating(birthdayDate)
+	if err != nil {
+		return err
+	}
+
+	err = DataValidating(NAME, surname)
+	if err != nil {
+		return err
+	}
+
+	err = DataValidating(NAME, middleName)
+	if err != nil {
+		return err
+	}
+
+	if passportData != "" {
+		err = DataValidating(PASS, passportData)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = DataValidating(EMAIL, email)
+	if err != nil {
+		return err
+	}
 
 	return env.Env.Model.InsertUser(surname, name, middleName, passportData, birthdayDate, email, address)
 }

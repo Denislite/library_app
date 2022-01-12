@@ -111,3 +111,43 @@ func (m *Model) TakeBook(id int, book, rating, fine string, discount float64) er
 
 	return nil
 }
+
+func (m *Model) GetAllOrders() ([]*models.UserBooks, error) {
+	req := "SELECT * FROM usersBooks"
+	rows, err := m.DB.Query(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var userBooks []*models.UserBooks
+
+	for rows.Next() {
+		userBook := &models.UserBooks{}
+		err = rows.Scan(&userBook.UserID, &userBook.BookID, &userBook.GiveDate, &userBook.ReturnDate,
+			&userBook.DefaultPrice, &userBook.DutyCount, &userBook.Returned, &userBook.Rating)
+		if err != nil {
+			return nil, err
+		}
+		userBooks = append(userBooks, userBook)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return userBooks, nil
+}
+
+func (m *Model) UpdateDuty() error {
+	req := "UPDATE usersBooks SET duty_count = duty_count + default_price*0.01 WHERE returned = FALSE AND return_date < UTC_TIMESTAMP()"
+	_, err := m.DB.Exec(req)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}

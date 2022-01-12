@@ -1,22 +1,34 @@
 package service
 
 import (
+	"errors"
 	"github.com/Denislite/library_app/env"
 	"github.com/Denislite/library_app/pkg/models"
-	"net/http"
 )
 
-func ValidateBook(r *http.Request) error {
-	r.ParseMultipartForm(30)
-	name := r.FormValue("name")
-	altName := r.FormValue("alt_name")
-	genre := r.FormValue("genre")
-	price := r.FormValue("price")
-	count := r.FormValue("count")
-	pricePerDay := r.FormValue("price_per_day")
-	year := r.FormValue("year")
-	imageLink := UploadImage("books", r)
-	authors := r.PostForm["author"]
+func ValidateBook(name, altName, imageLink, genre, price, count, pricePerDay, year string, authors []string) error {
+	if genre == "" {
+		return errors.New("syntax error")
+	}
+	err := DataValidating(FLOAT, price)
+	if err != nil {
+		return err
+	}
+	err = DataValidating(NUMBER, count)
+	if err != nil {
+		return err
+	}
+	err = DataValidating(FLOAT, pricePerDay)
+	if err != nil {
+		return err
+	}
+	err = YearValidating(year)
+	if err != nil {
+		return err
+	}
+	if len(authors) == 0 {
+		return errors.New("syntax error")
+	}
 
 	return env.Env.Model.InsertBook(name, altName, imageLink, genre, price, count, pricePerDay, year, authors)
 }

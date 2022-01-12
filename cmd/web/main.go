@@ -32,7 +32,7 @@ func main() {
 		Handler:  routes(),
 	}
 
-	go autoupdate.DutyUpdate()
+	go autoupdate.UserChecker()
 
 	infoLog.Printf("Starting server at 127.0.0.1%s", *addr)
 	err = server.ListenAndServe()

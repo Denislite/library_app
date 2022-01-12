@@ -34,12 +34,12 @@
                     <label for="year">year </label>
                 </div>
                 <p>
-                    <select name="genre" id="genre" class="form-select" size="3" multiple>
+                    <select name="author" id="author" class="form-select" size="3" multiple>
                         {{range .Authors}}
                         <option value="{{.ID}}">{{.Surname}} {{.Name}} {{.MiddleName}}</option>
                         {{end}}
                     </select>
-                    <select name="author" id="author" class="form-select" size="3" multiple>
+                    <select name="genre" id="genre" class="form-select" size="3">
                         {{range .Genres}}
                         <option value="{{.Name}}">{{.Name}}</option>
                         {{end}}
