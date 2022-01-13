@@ -1,9 +1,9 @@
 package autoupdate
 
 import (
-	"fmt"
 	"github.com/Denislite/library_app/pkg/mail"
 	"github.com/Denislite/library_app/pkg/service"
+	"log"
 	"time"
 )
 
@@ -12,17 +12,16 @@ func UserChecker() {
 	for range tick {
 		err := service.UpdateDuty()
 		if err != nil {
-			fmt.Println(err)
+			log.Print(err)
 		}
 
 		userBooks, err := service.GetUsersWithDuty()
 		if err != nil {
-			fmt.Println(err)
+			log.Print(err)
 		}
 
 		for _, userBook := range userBooks {
 			mail.SendEmail(userBook.Email, userBook.DutyCount)
 		}
-		fmt.Println("Upd")
 	}
 }

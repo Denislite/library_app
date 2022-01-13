@@ -1,28 +1,33 @@
 package mail
 
 import (
-	"fmt"
+	"github.com/Denislite/library_app/env"
 	"net/smtp"
 	"strconv"
 )
 
-const (
-	EMAIL = ""
-	PASS  = ""
-	HOST  = ""
-	PORT  = ""
-)
+type Email struct {
+	Name string
+	Pass string
+	Host string
+	Port string
+}
 
 func SendEmail(addr string, duty float64) error {
-	address := HOST + ":" + PORT
+	EmailData := &Email{
+		Name: env.Env.Email.Email,
+		Pass: env.Env.Email.Pass,
+		Host: env.Env.Email.Host,
+		Port: env.Env.Email.Port,
+	}
+	address := EmailData.Host + ":" + EmailData.Port
 	subject := "Subject: U have duty\n"
 	body := "U have duty:" + strconv.FormatFloat(duty, 'E', -1, 32)
 	message := []byte(subject + body)
 	to := []string{addr}
-	auth := smtp.PlainAuth("", EMAIL, PASS, HOST)
-	err := smtp.SendMail(address, auth, EMAIL, to, message)
+	auth := smtp.PlainAuth("", EmailData.Name, EmailData.Pass, EmailData.Host)
+	err := smtp.SendMail(address, auth, EmailData.Name, to, message)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil

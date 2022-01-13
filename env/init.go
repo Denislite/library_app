@@ -9,28 +9,36 @@ import (
 )
 
 type Environment struct {
-	ErrorLog      *log.Logger
-	InfoLog       *log.Logger
 	Model         *dao.Model
 	TemplateCache map[string]*template.Template
+	Email         EmailConfig
+}
+
+type EmailConfig struct {
+	Email string
+	Pass  string
+	Host  string
+	Port  string
 }
 
 var Env *Environment
 
 func NewEnv(db *sql.DB) *Environment {
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errorLog := log.New(os.Stderr, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	templateCache, err := newTemplateCache("./template/html/")
 	if err != nil {
-		errorLog.Fatal(err)
+		log.Fatal(err)
 	}
 
 	env := &Environment{
-		ErrorLog:      errorLog,
-		InfoLog:       infoLog,
 		Model:         &dao.Model{DB: db},
 		TemplateCache: templateCache,
+		Email: EmailConfig{
+			Email: os.Getenv("EMAIL"),
+			Pass:  os.Getenv("EMAIL_PASS"),
+			Host:  os.Getenv("EMAIL_HOST"),
+			Port:  os.Getenv("EMAIL_PORT"),
+		},
 	}
 
 	return env

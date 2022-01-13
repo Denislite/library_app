@@ -73,3 +73,5 @@ CREATE TABLE orders (
     real_date DATE NOT NULL,
     cost FLOAT NOT NULL
 );
+
+INSERT INTO genre (name) VALUES ('Comedy'), ('Poem'), ('Drama'), ('Story'), ('FairyTale');

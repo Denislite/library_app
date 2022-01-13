@@ -3,9 +3,11 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"fmt"
 	"github.com/Denislite/library_app/env"
 	"github.com/Denislite/library_app/pkg/autoupdate"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -15,32 +17,30 @@ func main() {
 	addr := flag.String("addr", ":8000", "HTTP-address")
 	flag.Parse()
 
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errorLog := log.New(os.Stderr, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
+	if err := godotenv.Load("config.env"); err != nil {
+		log.Print("No .env file found")
+	}
 
-	db, err := openDB()
+	user := os.Getenv("MYSQL_USER")
+	pass := os.Getenv("MYSQL_PASS")
+
+	db, err := openDB(user, pass)
 	if err != nil {
-		errorLog.Fatal(err)
+		fmt.Println(err)
 	}
 	defer db.Close()
 
 	env.Env = env.NewEnv(db)
 
-	server := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  routes(),
-	}
-
 	go autoupdate.UserChecker()
 
-	infoLog.Printf("Starting server at 127.0.0.1%s", *addr)
-	err = server.ListenAndServe()
-	errorLog.Fatal(err)
+	log.Printf("Starting server at 127.0.0.1%s", *addr)
+	err = http.ListenAndServe(*addr, routes())
+	log.Fatal(err)
 }
 
-func openDB() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:rootroot@/librarydb")
+func openDB(user, pass string) (*sql.DB, error) {
+	db, err := sql.Open("mysql", user+":"+pass+"@/librarydb")
 	if err != nil {
 		return nil, err
 	}
