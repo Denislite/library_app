@@ -151,3 +151,60 @@ func (m *Model) UpdateDuty() error {
 
 	return nil
 }
+
+func (m *Model) GetUsersWithDuty() ([]*models.User, error) {
+	req := "SELECT * FROM users WHERE (SELECT user_id FROM usersBooks WHERE return_date < UTC_TIMESTAMP())"
+	rows, err := m.DB.Query(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var users []*models.User
+
+	for rows.Next() {
+		user := &models.User{}
+		err = rows.Scan(&user.ID, &user.Surname, &user.Name, &user.MiddleName, &user.PassportData, &user.BirthdayDate,
+			&user.Email, &user.Address, &user.Discount, &user.DutyCount, &user.BookCount)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (m *Model) GetAvailableOrders() ([]*models.Order, error) {
+	req := "SELECT * FROM orders"
+	rows, err := m.DB.Query(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var orders []*models.Order
+
+	for rows.Next() {
+		order := &models.Order{}
+		err = rows.Scan(&order.ID, &order.UserId, &order.BookId, &order.GiveDate, &order.ReturnDate, &order.RealDate, &order.Cost)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, order)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
