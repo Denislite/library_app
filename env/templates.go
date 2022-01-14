@@ -7,14 +7,16 @@ import (
 )
 
 type TemplateData struct {
-	Author  *models.Author
-	Authors []*models.Author
-	Book    *models.Book
-	Books   []*models.Book
-	User    *models.User
-	Users   []*models.User
-	Genres  []*models.Genre
-	Orders  []*models.Order
+	Author    *models.Author
+	Authors   []*models.Author
+	Book      *models.Book
+	Books     []*models.Book
+	User      *models.User
+	Users     []*models.User
+	Genres    []*models.Genre
+	Orders    []*models.Order
+	UserBooks []*models.UserBooks
+	Error     error
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

@@ -82,7 +82,7 @@ func (m *Model) TakeBook(id int, book, rating, fine string, discount float64) er
 	for rows.Next() {
 		userBook := &models.UserBooks{}
 		err = rows.Scan(&userBook.UserID, &userBook.BookID, &userBook.GiveDate, &userBook.ReturnDate,
-			&userBook.DutyCount, &userBook.DefaultPrice, &userBook.Returned, &userBook.Rating)
+			&userBook.DefaultPrice, &userBook.DutyCount, &userBook.Returned, &userBook.Rating)
 		if err != nil {
 			return err
 		}
@@ -110,35 +110,6 @@ func (m *Model) TakeBook(id int, book, rating, fine string, discount float64) er
 	}
 
 	return nil
-}
-
-func (m *Model) GetAllOrders() ([]*models.UserBooks, error) {
-	req := "SELECT * FROM usersBooks"
-	rows, err := m.DB.Query(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	var userBooks []*models.UserBooks
-
-	for rows.Next() {
-		userBook := &models.UserBooks{}
-		err = rows.Scan(&userBook.UserID, &userBook.BookID, &userBook.GiveDate, &userBook.ReturnDate,
-			&userBook.DefaultPrice, &userBook.DutyCount, &userBook.Returned, &userBook.Rating)
-		if err != nil {
-			return nil, err
-		}
-		userBooks = append(userBooks, userBook)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return userBooks, nil
 }
 
 func (m *Model) UpdateDuty() error {
@@ -181,7 +152,7 @@ func (m *Model) GetUsersWithDuty() ([]*models.User, error) {
 	return users, nil
 }
 
-func (m *Model) GetAvailableOrders() ([]*models.Order, error) {
+func (m *Model) GetClosedOrders() ([]*models.Order, error) {
 	req := "SELECT * FROM orders"
 	rows, err := m.DB.Query(req)
 
@@ -207,4 +178,33 @@ func (m *Model) GetAvailableOrders() ([]*models.Order, error) {
 	}
 
 	return orders, nil
+}
+
+func (m *Model) GetActiveOrders() ([]*models.UserBooks, error) {
+	req := "SELECT * FROM usersBooks WHERE returned = FALSE"
+	rows, err := m.DB.Query(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var userBooks []*models.UserBooks
+
+	for rows.Next() {
+		userBook := &models.UserBooks{}
+		err = rows.Scan(&userBook.UserID, &userBook.BookID, &userBook.GiveDate, &userBook.ReturnDate,
+			&userBook.DefaultPrice, &userBook.DutyCount, &userBook.Returned, &userBook.Rating)
+		if err != nil {
+			return nil, err
+		}
+		userBooks = append(userBooks, userBook)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return userBooks, nil
 }

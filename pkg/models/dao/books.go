@@ -155,3 +155,32 @@ func (m *Model) GetAvailableBooks(id int) ([]*models.Book, error) {
 
 	return books, nil
 }
+
+func (m *Model) GetBooksByAuthorID(id int) ([]*models.Book, error) {
+	req := `SELECT * FROM books WHERE id IN (SELECT book_id FROM bookAuthors where author_id = ?)`
+	rows, err := m.DB.Query(req, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var books []*models.Book
+
+	for rows.Next() {
+		book := &models.Book{}
+		err = rows.Scan(&book.ID, &book.Name, &book.AltName, &book.Genre, &book.Price, &book.Count, &book.ImageLink,
+			&book.PricePerDay, &book.Year, &book.RegDate, &book.Rating)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}

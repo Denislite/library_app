@@ -18,6 +18,7 @@ func routes() *http.ServeMux {
 	mux.HandleFunc("/users/create", createUser)
 	mux.HandleFunc("/user/give", giveBook)
 	mux.HandleFunc("/user/take", takeBook)
+	mux.HandleFunc("/orders", showOrders)
 
 	fileServer := http.FileServer(http.Dir("./template/static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))

@@ -72,18 +72,18 @@ func TakeBook(id int, book, rating, fine string) error {
 	return env.Env.Model.TakeBook(id, book, rating, fine, discount)
 }
 
-func GetClosedOrders() ([]*models.UserBooks, error) {
-	return env.Env.Model.GetAllOrders()
-}
-
-func GetAvailableOrders() ([]*models.Order, error) {
-	return env.Env.Model.GetAvailableOrders()
-}
-
 func UpdateDuty() error {
 	return env.Env.Model.UpdateDuty()
 }
 
 func GetUsersWithDuty() ([]*models.User, error) {
 	return env.Env.Model.GetUsersWithDuty()
+}
+
+func GetClosedOrders() ([]*models.Order, error) {
+	return env.Env.Model.GetClosedOrders()
+}
+
+func GetActiveOrders() ([]*models.UserBooks, error) {
+	return env.Env.Model.GetActiveOrders()
 }

@@ -17,7 +17,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	data, err := service.GetTopBooks()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -31,7 +31,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 func showAuthors(w http.ResponseWriter, r *http.Request) {
 	data, err := service.GetAllAuthors()
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -51,9 +51,10 @@ func createAuthor(w http.ResponseWriter, r *http.Request) {
 		err := service.ValidateAuthor(surname, name, middleName, imagePath)
 
 		if err != nil {
-			log.Print(err)
-			http.Error(w, "Internal Server Error", 500)
-			return
+			log.Println(err)
+			service.Render(w, r, "addauthor.page.tmpl", &env.TemplateData{
+				Error: err,
+			})
 		}
 
 		http.Redirect(w, r, "/authors", 301)
@@ -66,19 +67,26 @@ func createAuthor(w http.ResponseWriter, r *http.Request) {
 func showAuthor(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		log.Print(err)
+		log.Println(err)
 		http.NotFound(w, r)
 		return
 	}
 
-	data, err := service.GetAuthorByID(id)
+	author, err := service.GetAuthorByID(id)
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
+		return
+	}
+
+	books, err := service.GetBooksByAuthorID(id)
+	if err != nil {
+		log.Println(err)
 		return
 	}
 
 	service.Render(w, r, "showauthor.page.tmpl", &env.TemplateData{
-		Author: data,
+		Author: author,
+		Books:  books,
 	})
 }
 
@@ -86,14 +94,14 @@ func showAuthor(w http.ResponseWriter, r *http.Request) {
 func showBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		log.Print(err)
+		log.Println(err)
 		http.NotFound(w, r)
 		return
 	}
 
 	book, authors, err := service.GetBookByID(id)
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -107,7 +115,7 @@ func showBook(w http.ResponseWriter, r *http.Request) {
 func showBooks(w http.ResponseWriter, r *http.Request) {
 	data, err := service.GetAllBooks()
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -132,16 +140,17 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 
 		err := service.ValidateBook(name, altName, imageLink, genre, price, count, pricePerDay, year, authors)
 		if err != nil {
-			log.Print(err)
-			http.Error(w, "Internal Server Error", 500)
-			return
+			log.Println(err)
+			service.Render(w, r, "addbook.page.tmpl", &env.TemplateData{
+				Error: err,
+			})
 		}
 
 		http.Redirect(w, r, "/books", 301)
 	} else {
 		authors, err := service.GetAllAuthors()
 		if err != nil {
-			log.Print(err)
+			log.Println(err)
 			http.Error(w, "Internal Server Error", 500)
 			return
 		}
@@ -165,7 +174,7 @@ func showUser(w http.ResponseWriter, r *http.Request) {
 
 	user, books, err := service.GetUserByID(id)
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -179,7 +188,7 @@ func showUser(w http.ResponseWriter, r *http.Request) {
 func showUsers(w http.ResponseWriter, r *http.Request) {
 	data, err := service.GetAllUsers()
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -201,9 +210,10 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
 		err := service.ValidateUser(surname, name, middleName, passportData, birthdayDate, email, address)
 		if err != nil {
-			log.Print(err)
-			http.Error(w, "Internal Server Error", 500)
-			return
+			log.Println(err)
+			service.Render(w, r, "adduser.page.tmpl", &env.TemplateData{
+				Error: err,
+			})
 		}
 
 		http.Redirect(w, r, "/users", 301)
@@ -224,21 +234,22 @@ func giveBook(w http.ResponseWriter, r *http.Request) {
 
 		err = service.GiveBook(id, book, returnDate)
 		if err != nil {
-			log.Print(err)
-			http.Error(w, "Internal Server Error", 500)
-			return
+			log.Println(err)
+			service.Render(w, r, "givebook.page.tmpl", &env.TemplateData{
+				Error: err,
+			})
 		}
 		http.Redirect(w, r, "/users", 301)
 	} else {
 		books, err := service.GetAvailableBooks(id)
 		if err != nil {
-			log.Print(err)
+			log.Println(err)
 			http.Error(w, "Internal Server Error", 500)
 			return
 		}
 		user, _, err := service.GetUserByID(id)
 		if err != nil {
-			log.Print(err)
+			log.Println(err)
 			http.Error(w, "Internal Server Error", 500)
 			return
 		}
@@ -252,7 +263,7 @@ func giveBook(w http.ResponseWriter, r *http.Request) {
 func takeBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		log.Print(err)
+		log.Println(err)
 		http.NotFound(w, r)
 		return
 	}
@@ -263,15 +274,16 @@ func takeBook(w http.ResponseWriter, r *http.Request) {
 
 		err = service.TakeBook(id, book, rating, fine)
 		if err != nil {
-			log.Print(err)
-			http.Error(w, "Internal Server Error", 500)
-			return
+			log.Println(err)
+			service.Render(w, r, "takebook.page.tmpl", &env.TemplateData{
+				Error: err,
+			})
 		}
 		http.Redirect(w, r, "/users", 301)
 	} else {
 		user, books, err := service.GetUserByID(id)
 		if err != nil {
-			log.Print(err)
+			log.Println(err)
 			http.Error(w, "Internal Server Error", 500)
 			return
 		}
@@ -280,4 +292,25 @@ func takeBook(w http.ResponseWriter, r *http.Request) {
 			User:  user,
 		})
 	}
+}
+
+func showOrders(w http.ResponseWriter, r *http.Request) {
+	active, err := service.GetActiveOrders()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	orders, err := service.GetClosedOrders()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	service.Render(w, r, "orders.page.tmpl", &env.TemplateData{
+		UserBooks: active,
+		Orders:    orders,
+	})
 }

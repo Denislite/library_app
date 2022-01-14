@@ -48,3 +48,7 @@ func GetTopBooks() ([]*models.Book, error) {
 func GetAvailableBooks(id int) ([]*models.Book, error) {
 	return env.Env.Model.GetAvailableBooks(id)
 }
+
+func GetBooksByAuthorID(id int) ([]*models.Book, error) {
+	return env.Env.Model.GetBooksByAuthorID(id)
+}

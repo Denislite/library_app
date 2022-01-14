@@ -9,16 +9,21 @@
             <form enctype="multipart/form-data" action="/authors/create" method="post">
                 <img class="mb-4" src="/static/assets/author_logo.png" alt="">
                 <h1 class="h3 mb-3 fw-normal">Add new Author</h1>
-                <div class="form-floating">
-                    <input type="text" class="form-control" name="surname" id="surname">
+                {{ with .Error }}
+                <div class="alert alert-danger" role="alert">
+                    {{ . }}
+                </div>
+                {{ end }}
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="surname" id="surname" placeholder="Surname">
                     <label for="surname">Surname</label>
                 </div>
-                <div class="form-floating">
-                    <input type="text" class="form-control" name="name" id="name">
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
                     <label for="name">Name</label>
                 </div>
-                <div class="form-floating">
-                    <input type="text" class="form-control" name="middle_name" id="middle_name">
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="middle_name" id="middle_name" placeholder="Middle Name">
                     <label for="middle_name">Middle Name</label>
                 </div>
                 <div class="mt-3">
