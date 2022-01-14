@@ -1,0 +1,62 @@
+{{template "base" .}}
+
+{{define "title"}}Author {{.Author.ID}}{{end}}
+
+{{define "main"}}
+<div class="container py-5">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            {{with .Author}}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {{ if .ImageLink }}
+                            <img src="{{ .ImageLink }}" alt="Admin" class="rounded-circle" width="150">
+                            {{ else }}
+                            <img src="/static/assets/author_logo.png" alt="Admin" class="rounded-circle" width="150">
+                            {{ end }}
+                            <div class="mt-3">
+                                <h4>{{.Surname}} {{.Name}} {{.MiddleName}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h1 class="display-8 fw-bold">
+                            Book list:
+                        </h1>
+                        {{if .Books}}
+                        {{range .Books}}
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">ID:{{.ID}}</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <a href="/book?id={{.ID}}">
+                                {{.Name}} ({{.AltName}})
+                                </a>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{else}}
+                        <hr>
+                        <div class="row">
+                            <a href="/books/create">
+                                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Add book</button>
+                            </a> <br>
+                        </div>
+                        <hr>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

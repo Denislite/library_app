@@ -1,0 +1,117 @@
+{{template "base" .}}
+
+{{define "title"}}Orders{{end}}
+
+{{define "main"}}
+
+<div class="container my-5">
+    <h1 class="display-8 fw-bold">
+        Active orders:
+    </h1>
+    <div class="row fw-bold">
+        <div class="col-md-2 border border-dark">
+            UserID:
+        </div>
+        <div class="col-md-2 border border-dark">
+            BookID:
+        </div>
+        <div class="col-md-2 border border-dark">
+            GiveDate:
+        </div>
+        <div class="col-md-2 border border-dark">
+            ReturnDate:
+        </div>
+        <div class="col-md-2 border border-dark">
+            DefaultPrice:
+        </div>
+        <div class="col-md-2 border border-dark">
+            DutyCount:
+        </div>
+    </div>
+    {{range .UserBooks}}
+    <div class="row">
+        <div class="col-md-2 border border-dark">
+            <a href="/user?id={{.UserID}}">
+            {{.UserID}}
+            </a>
+        </div>
+        <div class="col-md-2 border border-dark">
+            <a href="/book?id={{.BookID}}">
+            {{.BookID}}
+            </a>
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.GiveDate}}
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.ReturnDate}}
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.DefaultPrice}}
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.DutyCount}}
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<div class="container my-5">
+    <h1 class="display-8 fw-bold">
+        Closed orders:
+    </h1>
+    <div class="row fw-bold">
+        <div class="col-md-1 border border-dark">
+            OrderID:
+        </div>
+        <div class="col-md-1 border border-dark">
+            UserID:
+        </div>
+        <div class="col-md-1 border border-dark">
+            BookID:
+        </div>
+        <div class="col-md-2 border border-dark">
+            GiveDate:
+        </div>
+        <div class="col-md-2 border border-dark">
+            ReturnDate:
+        </div>
+        <div class="col-md-2 border border-dark">
+            RealDate:
+        </div>
+        <div class="col-md-3 border border-dark">
+            Cost:
+        </div>
+    </div>
+    {{range .Orders}}
+    <div class="row">
+        <div class="col-md-1 border border-dark">
+            {{.ID}}
+        </div>
+        <div class="col-md-1 border border-dark">
+            <a href="/user?id={{.UserId}}">
+                {{.UserId}}
+            </a>
+        </div>
+        <div class="col-md-1 border border-dark">
+            <a href="/book?id={{.BookId}}">
+                {{.BookId}}
+            </a>
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.GiveDate}}
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.ReturnDate}}
+        </div>
+        <div class="col-md-2 border border-dark">
+            {{.RealDate}}
+        </div>
+        <div class="col-md-3 border border-dark">
+            {{.Cost}}
+        </div>
+    </div>
+    {{end}}
+</div>
+
+{{end}}

@@ -1,0 +1,52 @@
+{{template "base" .}}
+
+{{define "title"}}Add user{{end}}
+
+{{define "main"}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <form enctype="multipart/form-data" action="/users/create" method="post">
+                <img class="mb-4" src="/static/assets/user_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Add new User</h1>
+                {{ with .Error }}
+                <div class="alert alert-danger" role="alert">
+                    {{ . }}
+                </div>
+                {{ end }}
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="surname" id="surname" placeholder="Surname">
+                    <label for="surname">Surname</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                    <label for="name">Name</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="middle_name" id="middle_name" placeholder="Middle Name">
+                    <label for="middle_name">Middle Name</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="passport_data" id="passport_data" placeholder="Passport Data">
+                    <label for="passport_data">Passport Data</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="date" class="form-control" name="birthday_date" id="birthday_date">
+                    <label for="birthday_date">Birthday Date</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Email">
+                    <label for="email">Email</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                    <label for="address">Address</label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

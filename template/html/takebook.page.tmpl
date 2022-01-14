@@ -1,0 +1,59 @@
+{{template "base" .}}
+
+{{define "title"}}Take book{{end}}
+
+{{define "main"}}
+
+{{if .Books}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            {{with .User}}
+            <form enctype="multipart/form-data" action="/user/take?id={{.ID}}" method="post">
+                <img class="mb-4" src="/static/assets/book_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Take from user: {{.Surname}} {{.Name}}</h1>
+                {{end}}
+                {{ with .Error }}
+                <div class="alert alert-danger" role="alert">
+                    {{ . }}
+                </div>
+                {{ end }}
+                    <select name="book" id="book" class="form-select mb-1" size="3">
+                        {{range .Books}}
+                        <option value="{{.ID}}">Book: {{.Name}}</option>
+                        {{end}}
+                    </select>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="rating" id="rating" placeholder="Rating">
+                    <label for="rating">Rating</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="fine" id="fine" placeholder="Fine">
+                    <label for="fine">Fine</label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{ else }}
+<div class="container my-5">
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="col-lg-8 p-3 p-lg-5 pt-lg-3">
+            <h1 class="display-4 fw-bold lh-1">User don't took any book! &#129300;</h1>
+            <p class="lead"> Go back </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                <a href="/user?id={{.User.ID}}">
+                    <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Return to world</button>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 offset-lg-1 p-0 overflow-hidden">
+            <img class="rounded-lg-3" src="/static/assets/book_logo512.png" alt="" width="256" height="256">
+        </div>
+    </div>
+</div>
+{{ end }}
+{{end}}

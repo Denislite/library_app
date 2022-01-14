@@ -1,0 +1,40 @@
+{{template "base" .}}
+
+{{define "title"}}Add author{{end}}
+
+{{define "main"}}
+<div class="text-center py-3">
+    <div class="container">
+        <div class="w-100 d-flex justify-content-center">
+            <form enctype="multipart/form-data" action="/authors/create" method="post">
+                <img class="mb-4" src="/static/assets/author_logo.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Add new Author</h1>
+                {{ with .Error }}
+                <div class="alert alert-danger" role="alert">
+                    {{ . }}
+                </div>
+                {{ end }}
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="surname" id="surname" placeholder="Surname">
+                    <label for="surname">Surname</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                    <label for="name">Name</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" name="middle_name" id="middle_name" placeholder="Middle Name">
+                    <label for="middle_name">Middle Name</label>
+                </div>
+                <div class="mt-3">
+                    <input type="file" name="authors" id="authors">
+                    <label for="authors">Choose image</label>
+                </div>
+                <div>
+                    <input class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

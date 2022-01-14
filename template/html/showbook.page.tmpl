@@ -1,0 +1,100 @@
+{{template "base" .}}
+
+{{define "title"}}Book {{.Book.ID}}{{end}}
+
+{{define "main"}}
+<div class="container py-5">
+    <div class="main-body">
+        {{with .Book}}
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {{ if .ImageLink }}
+                            <img src="{{ .ImageLink }}" alt="Admin" class="rounded-circle" width="150">
+                            {{ else }}
+                            <img src="/static/assets/book_logo.png" alt="Admin" class="rounded-circle" width="150">
+                            {{ end }}
+                            <div class="mt-3">
+                                <h4>{{.Name}} {{.AltName}}</h4>
+                                <p class="text-secondary mb-1">Genre: {{.Genre}}</p>
+                                <p class="text-muted font-size-sm">Year: {{.Year}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h1 class="display-8 fw-bold">
+                            Book data:
+                        </h1>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">PricePerDay</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{.PricePerDay}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Price</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{.Price}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Count</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{.Count}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Rating</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{.Rating}}
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{if .Authors}}
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="display-8 fw-bold">
+                        Authors:
+                    </h1>
+                    {{range .Authors}}
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0"> ID: {{.ID}}</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <a href="/author?id={{.ID}}">{{.Surname}} ({{.Name}}) </a>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
