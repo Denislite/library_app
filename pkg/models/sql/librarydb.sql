@@ -56,12 +56,7 @@ CREATE TABLE bookAuthors (
 
 CREATE TABLE genre (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL
-);
-
-CREATE TABLE booksGenres (
-    book_id INTEGER NOT NULL REFERENCES books(id),
-    genre_id INTEGER NOT NULL REFERENCES genre(id)
+    name VARCHAR(30) NOT NULL REFERENCES books(genre)
 );
 
 CREATE TABLE orders (
