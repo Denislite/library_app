@@ -19,7 +19,7 @@ func GiveBook(id int, book, returnDate string) error {
 
 	date, _ := time.Parse("2006-01-02", returnDate)
 	now := -time.Now().Sub(date)
-	days := int(now.Hours() / 24)
+	days := int(now.Hours()/24) + 1
 
 	user, _, err := GetUserByID(id)
 	if err != nil {
