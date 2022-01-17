@@ -29,6 +29,8 @@ func GiveBook(id int, book, returnDate string) error {
 	var discount float64
 
 	switch {
+	case user.BookCount == 5:
+		return errors.New("maximum book count")
 	case user.BookCount > 3:
 		discount = 0.85
 	case user.BookCount > 1:
