@@ -1,25 +1,14 @@
 package dao
 
 import (
-	"errors"
 	"fmt"
 	"github.com/Denislite/library_app/pkg/models"
 )
 
 func (m *Model) GiveBook(id, days int, book, returnDate string, discount float64) error {
-	user, _, err := m.GetUserByID(id)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	if user.BookCount == 5 {
-		return errors.New("maximum book count")
-	}
-
 	req := `INSERT INTO usersBooks (user_id, book_id, give_date, return_date, default_price) SELECT ?, ?, 
             UTC_TIMESTAMP(), ?, books.price_per_day*?*? FROM books WHERE books.ID = ?`
-	_, err = m.DB.Exec(req, id, book, returnDate, days, discount, book)
+	_, err := m.DB.Exec(req, id, book, returnDate, days, discount, book)
 	if err != nil {
 		fmt.Println(err)
 		return err
